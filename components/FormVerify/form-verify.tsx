@@ -1,65 +1,72 @@
 import { Dispatch, SetStateAction, useState } from "react"
+import { DeepRequired, FieldErrorsImpl, FieldValues, useFormContext, UseFormHandleSubmit, UseFormRegister } from "react-hook-form"
 
 interface FormVerifyProps {
-    cardNumber: string
-    cardName: string
-    expireDate: {month: string, year: string}
-    cvc: string
-    onCardNumber:(e:any)=>void
-    onCardName:(e:any)=>void
-    onExpDateMonth:(e:any)=>void
-    onExpDateYear:(e:any)=>void
-    onCvc:(e:any)=>void
-    isCardNumberValid:boolean
-    isMonthValid:boolean
-    isYearValid:boolean
-    isCvcValid:boolean
+    onRegister:UseFormRegister<FieldValues>
+    onError:FieldErrorsImpl<DeepRequired<FieldValues>>
+    onSubmit:any
+    onCvcRegister: any
 }
 
 const FormVerify = (props: Partial<FormVerifyProps>)=>{
 
     const [validation, setValidation] = useState(false)
 
-    const confirmHandler = (e:any)=>{
-        e.preventDefault()
-        if(props.isCardNumberValid &&
-            props.isMonthValid &&
-            props.isYearValid &&
-            props.isCvcValid)
-            setValidation(true)
-    }
+    const { register, formState:{ errors } } = useFormContext<any>();
 
     const formVerify = (
-        <form className='w-[30rem] desktop:pl-6'>
+        <form className='w-[30rem] desktop:pl-6' onSubmit={props.onSubmit?.((data:any)=>{
+            setValidation(true)
+        })}>
             <div className='flex flex-col pb-2'>
-                <label className='pb-2 text-tiny text-[#21092F] uppercase' htmlFor='cardName'>Cardholder Name</label>
-                <input className='field-primary peer' name='cardName' placeholder='e.g Jane Appleseed' type='text' value={props.cardName} onChange={props.onCardName} required/>
-                <p className="hidden peer-invalid:block text-red-600 text-sm pl-2">Please enter a name</p>
+                <label className='pb-2 text-tiny text-text-gray-violet uppercase' htmlFor='cardName'>Cardholder Name</label>
+                <input className={`field-primary ${errors.cardName ? 'border-red-500': 'border-light-gray-violet'}`}
+                    {...register('cardName', {
+                        required:{value:true, message:"Please enter a name"}, 
+                        pattern:{ value:/[A-Za-z]+$/, message:'Not numbers allowed in name'}})}
+                    placeholder='e.g Jane Appleseed' />
+                {errors.cardName && (<p className="text-red-600 text-sm pl-2">{errors.cardName.message as unknown as string}</p>)}
             </div>
             <div className='flex flex-col pb-2'>
-                <label className='py-2 text-tiny text-[#21092F] uppercase' htmlFor='cardNumber'>Card Number</label>
-                <input className='field-primary peer' name='cardNumber' placeholder='e.g 1234 5678 9123 0000' type='text' value={props.cardNumber} onChange={props.onCardNumber} maxLength={19} required />
-                <p className="hidden peer-invalid:block text-red-600 text-sm pl-2">Please enter a Card Number</p>
-                {!props.isCardNumberValid ? (<p className="text-red-600 text-sm pl-2 block peer-invalid:hidden">Invalid Format</p>): (<></>)}
+                <label className='py-2 text-tiny text-text-gray-violet uppercase' htmlFor='cardNumber'>Card Number</label>
+                <input className={`field-primary ${errors.cardNumber ? 'border-red-500': 'border-light-gray-violet'}`}
+                    {...register('cardNumber', {
+                        required:{value:true, message:"Please enter a Card Number"}, 
+                        pattern:{ value:/[0-9]+$/, message:'Invalid format'}, 
+                        minLength:{value:16, message:'16 digits is required'}})}
+                    placeholder='e.g 1234 5678 9123 0000' maxLength={16}/>
+                {errors.cardNumber && (<p className="text-red-600 text-sm pl-2">{errors.cardNumber.message as unknown as string}</p>)}
             </div>
             <div className='flex flex-row justify-between items-end pb-2'>
                 <div className=''>
-                    <label className='text-tiny text-[#21092F] uppercase' htmlFor='expireDate'>Exp. Date (MM/DD)</label>
+                    <label className='text-tiny text-text-gray-violet uppercase' htmlFor='expireDate'>Exp. Date (MM/DD)</label>
                     <div className='inline-block'>
-                        <input className='field-primary inline peer w-20 mr-2' placeholder='MM' type='text' value={props.expireDate?.month} onChange={props.onExpDateMonth} maxLength={2} required/>
-                        <input className='field-primary inline peer w-20 ml-2' placeholder='YY' type='text' value={props.expireDate?.year} onChange={props.onExpDateYear} maxLength={2} required/>
-                        <p className="hidden peer-invalid:block text-red-600 text-sm pl-2">Can&apos;t be blank</p>
-                        {!props.isYearValid && !props.isMonthValid ? (<p className="text-red-600 text-sm pl-2 block peer-invalid:hidden">Invalid Format</p>): (<></>)}
+                        <input className={`field-primary inline w-20 mr-2 ${errors.expireDateMonth ? 'border-red-500': 'border-light-gray-violet'}`} 
+                            {...register('expireDateMonth', {
+                                required:{value:true, message:"Can't be blank"}, 
+                                pattern:{ value:/[0-9]+$/, message:'Invalid format'}, 
+                                maxLength:{value:2, message:'Two digits is required'}, 
+                                minLength:{value:2, message:'Two digits is required'}})}
+                            placeholder='MM' maxLength={2} />
+                        <input className={`field-primary inline w-20 ml-2 ${errors.expireDateYear ? 'border-red-500': 'border-light-gray-violet'}`}
+                            {...register('expireDateYear', {
+                                required:{value:true, message:"Can't be blank"}, 
+                                pattern:{ value:/[0-9]+$/, message:'Invalid format'}, 
+                                maxLength:{value:2, message:'Two digits is required'}, 
+                                minLength:{value:2, message:'Two digits is required'}})}
+                            placeholder='YY' maxLength={2} name='expireDateYear'/>
+                        {errors.expireDateYear || errors.expireDateMonth ? (<p className="text-red-600 text-sm pl-2">{errors.expireDateYear?.message as unknown as string || errors.expireDateMonth?.message as unknown as string}</p>):<></>}
                     </div>
                 </div>
                 <div className='flex flex-col'>
-                    <label className='text-tiny text-[#21092F] uppercase' htmlFor='cardNumber'>Cvc</label>
-                    <input className='field-primary peer' name='cardNumber' placeholder='e.g 123' type='text' value={props.cvc} onChange={props.onCvc} maxLength={3} required/>
-                    <p className="hidden peer-invalid:block text-red-600 text-sm pl-2">Can&apos;t be blank</p>
-                    {!props.isCvcValid ? (<p className="text-red-600 text-sm pl-2 block peer-invalid:hidden ">Invalid Format</p>): (<></>)}
+                    <label className='text-tiny text-text-gray-violet uppercase' htmlFor='cvc'>Cvc</label>
+                    <input className={`field-primary ${errors.cvc ? 'border-red-500': 'border-light-gray-violet'}`} 
+                        {...register('cvc', {required:{value:true, message:"Can't be blank"}, pattern:{ value:/[0-9]+$/, message:'Invalid format'}, minLength:{value:3, message:'Three digits is required'}})}
+                        placeholder='eg. 123' maxLength={3}/>
+                    {errors.cvc && (<p className="text-red-600 text-sm pl-2">{errors.cvc.message as unknown as string}</p>)}
                 </div>
             </div>
-            <button className='btn-primary' type='submit' onClick={confirmHandler} >Confirm</button>
+            <button className='btn-primary' type='submit'>Confirm</button>
         </form> 
     )
 

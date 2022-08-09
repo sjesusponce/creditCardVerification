@@ -16,7 +16,7 @@ const CreditCardRearPreview = (props: Partial<CreditCardRearProps>)=>{
     return(
         <div className={css.join(' ')}>
             <div className='absolute top-[5.856rem] right-12'>
-                <div className='font-thin'>
+                <div className='font-thin text-white'>
                     {props.cvc == undefined || props.cvc.length == 0 ? '000' : props.cvc}
                 </div>
             </div>

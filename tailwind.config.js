@@ -22,6 +22,12 @@ module.exports = {
       '7xl': '5.125rem',
     },
     extend: {
+      colors:{
+        'light-gray-violet': '#DEDDDF',
+        'semidark-gray-violet': '#6448FE',
+        'dark-gray-violet': '#600594',
+        'text-gray-violet': '#21092F'
+      },
       fontFamily: {
         'space-grotesk': ['"Space Grotesk"']
       },

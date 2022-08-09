@@ -17,10 +17,10 @@ const CreditCardFrontPreview = (props:Partial<CreditCardFrontProps>)=>{
                     </span>
                 </div>
                 <div className='flex flex-col'>
-                    <div className='pb-5 text-center text-2xl font-bold justify-self-end'>
-                        {props.cardNumber == undefined || props.cardNumber.length == 0 ? '0000 0000 0000 0000' : props.cardNumber}
+                    <div className='pb-5 text-center text-2xl text-white font-bold justify-self-end'>
+                        {props.cardNumber == undefined || props.cardNumber.length == 0 ? (<h1>0000 0000 0000 0000</h1>) : (<h1>{props.cardNumber}</h1>)}
                     </div>
-                    <div className='flex justify-between text-sm font-normal'>
+                    <div className='flex justify-between text-sm text-white font-normal'>
                         {props.cardName == undefined || props.cardName.length == 0 ? (<p>Jane Appleseed</p>) : (<p>{props.cardName}</p>)}
                         {props.expireDate == undefined || props.expireDate.month.length == 0 && props.expireDate.year.length == 0 ? (<p>00/00</p>) : (<p>{props.expireDate.month}/{props.expireDate.year}</p>)}
                     </div>

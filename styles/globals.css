@@ -8,11 +8,11 @@
   }
 
   .field-primary{
-    @apply bg-white pl-4 py-2 rounded-md outline-none border-2 border-[#DEDDDF]  hover:border-[#6448FE] focus:border-[#600594] text-[#21092F] invalid:border-red-500
+    @apply bg-white pl-4 py-2 rounded-md outline-none border-2 border-light-gray-violet  hover:border-semidark-gray-violet focus:border-dark-gray-violet text-text-gray-violet
   }
 
   .btn-primary{
-    @apply bg-[#21092F] w-full desktop:py-3 mobile:py-4 desktop:mt-8 mobile:mt-6 rounded-md 
+    @apply bg-text-gray-violet text-white w-full desktop:py-3 mobile:py-4 desktop:mt-8 mobile:mt-6 rounded-md 
   }
 
 }
